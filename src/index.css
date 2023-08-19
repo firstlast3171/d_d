@@ -1,0 +1,8 @@
+#toggle:focus{
+     box-shadow: none;
+}
+
+#toggle{
+     border: none;
+     color: white;
+}
