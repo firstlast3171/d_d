@@ -40,6 +40,7 @@ function Header() {
                          <Nav className='ms-auto'>
                               <Nav.Link href='/' className={path == "/" ? 'text-dark bg-light px-3 rounded' :'text-light px-3'}>Calculation</Nav.Link>
                               <Nav.Link href='/commession' className={path == "/commession" ? 'text-dark bg-light px-3 rounded' :'text-light px-3'}>Commession</Nav.Link>
+                              <Nav.Link href='/guide' className={path == "/guide" ? 'text-dark bg-light px-3 rounded' :'text-light px-3'}>Guide</Nav.Link>
                          </Nav>
                     </Navbar.Collapse>
                </Container>
