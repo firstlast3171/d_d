@@ -93,6 +93,23 @@ const reverseString = (inputString) => {
                               return item;
                             }
                     })
+                    if(toarray[0].includes('.')){
+                         const stringArray = toarray[0].split(".");
+                         const straight = stringArray.join(",");
+                         const reverse = reverseString(straight);
+            
+                         const numbersArrayTop = straight.split(",");
+                         const numbersArrayEnd= reverse.split(",");
+                         const attatchWithPriceTop = numbersArrayTop.map(item=>{
+                              return item + "-" + smallmap[1][0];
+                         })
+                         const attatchWithPriceEnd = numbersArrayEnd.map(item=>{
+                              return item + "-" + smallmap[1][1];
+                         })
+                         return [...attatchWithPriceTop,...attatchWithPriceEnd].join(", ")+", ";
+                       
+                    }
+            
                     const straightValue = toarray[0] + "-" + smallmap[1][0];
                     const reverseValue = reverseString(toarray[0]) + "-" + smallmap[1][1];
                     return [straightValue, reverseValue].join(", ")+", ";
@@ -109,8 +126,20 @@ const reverseString = (inputString) => {
              
                     const modifiedArray = reverse.map(item => {
                          const toarray = item.split("R");
+                         if(toarray[0].includes('.')){
+                              const stringArray = toarray[0].split(".");
+                              const straight = stringArray.join(",");
+                              const reverse = reverseString(straight);
+                              const numbers = straight + "," + reverse;
+                              const numbersArray = numbers.split(",");
+                              const attatchWithPrice = numbersArray.map(item=>{
+                                   return item + "-" + toarray[1];
+                              })
+                            return attatchWithPrice.join(", ")+", "; 
+                         }
                          const straightValue = toarray[0];
                          const reverseValue = reverseString(straightValue);
+                        
                          return straightValue + "-" + toarray[1] + ", " + reverseValue + "-" + toarray[1];
                      });
 
@@ -128,7 +157,7 @@ const reverseString = (inputString) => {
             var item = i.toString().padStart(2, '0');
             arrayonetohand.push(item);
           }
-          const includeOne = toarray.filter(num=>num.includes("P"));
+          const includeOne = toarray.filter(num=>num.includes("P") && !num.includes("PW"));
           if(includeOne.length > 0){
                const modifiedArray = includeOne.map(included=>{
                     const findwith = included.split("P");
@@ -161,7 +190,7 @@ const reverseString = (inputString) => {
            // appu
 
           // Kway
-          const possibleNum = toarray.filter(num=>num.includes("K") && !num.includes("KA"));
+          const possibleNum = toarray.filter(num=>num.includes("K") && !num.includes("KA") && !num.includes("NK"));
           if(possibleNum.length > 0){
                const modifiedArray = possibleNum.map(a=>{
                     const textToArray = a.split("K")
@@ -214,6 +243,243 @@ const reverseString = (inputString) => {
                console.log("No possibleNumAppu")
           }
           // KwayPUU
+
+          // top
+          const top = toarray.filter(num=>num.includes("T"));
+          if(top.length > 0){
+          const modifiedArray = top.map(a=>{
+               const textToArray = a.split("T");
+               const selectedNumbers = arrayonetohand.filter(num=>num[0]===textToArray[0]);
+               // console.log(selectedNumbers);
+               return selectedNumbers.map(num=>num+ "-" +textToArray[1]).join(", ")+", ";
+          })
+          beforeArray += modifiedArray;
+          }else{
+               console.log("No Top")
+          }
+          // top
+
+          
+          // end
+          const end = toarray.filter(num=>num.includes("L"));
+          if(end.length > 0){
+          const modifiedArray = end.map(a=>{
+               const textToArray = a.split("L");
+               const selectedNumbers = arrayonetohand.filter(num=>num[1]===textToArray[0]);
+               // console.log(selectedNumbers);
+               return selectedNumbers.map(num=>num+ "-" +textToArray[1]).join(", ")+", ";
+          })
+          beforeArray += modifiedArray;
+          }else{
+               console.log("No End")
+          }
+          // end
+
+          
+          // Brake
+          const brake = toarray.filter(num=>num.includes("B"));
+          if(brake.length > 0){
+          const modifiedArray = brake.map(a=>{
+               const textToArray = a.split("B");
+               const selectedNumbers = arrayonetohand.filter(num=> {
+                    const toBrakeNum = parseInt(num[1])+parseInt(num[0]);
+                    
+                    if(toBrakeNum.toString().length === 2){
+                         if(toBrakeNum.toString()[1] === textToArray[0]){
+                              return num;
+                         }
+                    }else{
+                         if(toBrakeNum.toString() === textToArray[0]){
+                              return num;
+                         }
+                    }
+                    
+                
+               });
+ 
+               return selectedNumbers.map(num=>num+ "-" +textToArray[1]).join(", ")+", ";
+          })
+          beforeArray += modifiedArray;
+          }else{
+               console.log("No BK")
+          }
+          // Brake
+
+          // power
+          const power = toarray.filter(num=>num.includes("PW"));
+          if(power.length > 0){
+               const modifiedArray = power.map(a=>{
+                    const price = a.split("W")[1];
+                    const nums = ["05","16","27","38","49","50","61","72","83","94"];
+                    return nums.map(num=>num+"-"+price).join(", ")+", ";
+               })
+               beforeArray += modifiedArray;
+
+          }else{
+               console.log("No Power");
+          }
+           // power
+
+          // power
+          const netKhat = toarray.filter(num=>num.includes("NK"));
+          if(netKhat.length > 0){
+               const modifiedArray = netKhat.map(a=>{
+                    const price = a.split("K")[1];
+                    const nums = ["07","18","24","35","42","53","69","70","81","96"];
+                    return nums.map(num=>num+"-"+price).join(", ")+", ";
+               })
+               beforeArray += modifiedArray;
+
+          }else{
+               console.log("No NetKhat");
+          }
+           // power
+
+           // eveneven
+               const evenEven = toarray.filter(num=>num.includes("EE"));
+               if(evenEven.length > 0){
+                    const modifiedArray = evenEven.map(a=>{
+                         const price = a.split("E")[2];
+                         const nums = arrayonetohand.filter(num=>{
+                              const firstDigit = parseInt(num[0], 10);
+                              const secondDigit = parseInt(num[1], 10);
+                               if(firstDigit % 2 === 0 && secondDigit % 2 === 0){
+                                   return num;
+                               };
+                         })
+                         return nums.map(num=>num+"-"+price).join(", ")+", ";
+                    })
+                    beforeArray += modifiedArray;
+               }else{
+                    console.log("Not EvenEven")
+               }
+           //eveneven
+
+                 // evenodd
+                 const evenOdd = toarray.filter(num=>num.includes("EO"));
+                 if(evenOdd.length > 0){
+                      const modifiedArray = evenOdd.map(a=>{
+                           const price = a.split("O")[1];
+                           const nums = arrayonetohand.filter(num=>{
+                                const firstDigit = parseInt(num[0], 10);
+                                const secondDigit = parseInt(num[1], 10);
+                                 if(firstDigit % 2 === 0 && secondDigit % 2 !== 0){
+                                     return num;
+                                 };
+                           })
+                           return nums.map(num=>num+"-"+price).join(", ")+", ";
+                      })
+                      beforeArray += modifiedArray;
+                 }else{
+                      console.log("Not EvenOdd")
+                 }
+             //evenodd
+
+               // oddodd
+                 const oddOdd = toarray.filter(num=>num.includes("OO"));
+                 if(oddOdd.length > 0){
+                      const modifiedArray = oddOdd.map(a=>{
+                           const price = a.split("O")[2];
+                           const nums = arrayonetohand.filter(num=>{
+                                const firstDigit = parseInt(num[0], 10);
+                                const secondDigit = parseInt(num[1], 10);
+                                 if(firstDigit % 2 !== 0 && secondDigit % 2 !== 0){
+                                     return num;
+                                 };
+                           })
+                           return nums.map(num=>num+"-"+price).join(", ")+", ";
+                      })
+                      beforeArray += modifiedArray;
+                 }else{
+                      console.log("Not EvenOdd")
+                 }
+             //oddodd
+
+          // oddEven
+                 const oddEven = toarray.filter(num=>num.includes("OE"));
+                 if(oddEven.length > 0){
+                      const modifiedArray = oddEven.map(a=>{
+                           const price = a.split("E")[1];
+                           const nums = arrayonetohand.filter(num=>{
+                                const firstDigit = parseInt(num[0], 10);
+                                const secondDigit = parseInt(num[1], 10);
+                                 if(firstDigit % 2 !== 0 && secondDigit % 2 === 0){
+                                     return num;
+                                 };
+                           })
+                           return nums.map(num=>num+"-"+price).join(", ")+", ";
+                      })
+                      beforeArray += modifiedArray;
+                 }else{
+                      console.log("Not EvenOdd")
+                 }
+          //oddEven
+
+          //nyiKo
+               const smallBig = toarray.filter(num=>num.includes("SB"));
+               if(smallBig.length > 0){
+                    const modifiedArray = smallBig.map(a=>{
+                         const price = a.split("B")[1];
+                         const nums = ["01","09","12","23","34","45","56","67","78","89"];
+                         return nums.map(num=>num+"-"+price).join(", ")+", ";
+                    });
+                    beforeArray += modifiedArray;
+               }else{
+                    console.log("Not smallBig");
+               }
+          //nyiKo
+
+          //koNyi
+               const koNyi = toarray.filter(num=>num.includes("BS"));
+               if(koNyi.length > 0){
+                    const modifiedArray = koNyi.map(a=>{
+                         const price = a.split("S")[1];
+                         const nums = ["10","90","21","32","43","54","65","76","87","98"];
+                         return nums.map(num=>num+"-"+price).join(", ")+", ";
+                    });
+                    beforeArray += modifiedArray;
+               }else{
+                    console.log("Not smallBig");
+               }
+          //koNyi
+
+          // stickerEven
+               const stickerEven = toarray.filter(num=>num.includes("E") && !num.includes("EE") && !num.includes("EO") && !num.includes("OE"));
+               if(stickerEven.length > 0){
+                    const modifiedArray = stickerEven.map(a=>{
+                         const textToArray = a.split("E");
+                         const price = textToArray[1];
+                         const oneDigitNum = textToArray[0];
+                         const even = ["2","4","6","8","0"];
+                         const stickToTop = even.map(num=>num+oneDigitNum);
+                         const stickToLast = even.map(num=>oneDigitNum+num);
+                         const nums = [...stickToTop,...stickToLast];
+                         return nums.map(num=>num+"-"+price).join(", ")+", ";
+                    });
+                    beforeArray += modifiedArray;
+               }else{
+                    console.log("Not stickerEven");
+               }
+          // stickerEven
+
+             // stickerOdd
+             const stickerOdd = toarray.filter(num=>num.includes("O") && !num.includes("OO") && !num.includes("EO") && !num.includes("OE"));
+             if(stickerOdd.length > 0){
+                  const modifiedArray = stickerOdd.map(a=>{
+                       const textToArray = a.split("O");
+                       const price = textToArray[1];
+                       const oneDigitNum = textToArray[0];
+                       const even = ["1","3","5","7","9"];
+                       const stickToTop = even.map(num=>num+oneDigitNum);
+                       const stickToLast = even.map(num=>oneDigitNum+num);
+                       const nums = [...stickToTop,...stickToLast];
+                       return nums.map(num=>num+"-"+price).join(", ")+", ";
+                  });
+                  beforeArray += modifiedArray;
+             }else{
+                  console.log("Not stickerOdd");
+             }
+        // stickerOdd
 
           const inputObject = beforeArray.slice(0, beforeArray.length-2).split(", ");
           const cleanedObject = {};
@@ -284,7 +550,7 @@ const cleanedArray = Object.values(cleanedObject);
                          <Col sm={12} className='my-3'>
                     
                                    <Form.Select onChange={handleOption} value={selectedOption}>
-                              <option value="all">All</option>
+                              <option value="default">Default</option>
                               <option value="KyawKyaw">KyawKyaw</option>
                               <option value="ZawZaw">ZawZaw</option>
                               <option value="MyaMya">MyaMya</option>
